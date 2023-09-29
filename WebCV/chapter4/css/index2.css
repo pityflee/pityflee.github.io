@@ -1,0 +1,45 @@
+.bt {
+	width: 120px;
+	height: 60px;
+	background-color: #6998AB;
+	color: aliceblue;
+	text-align: center;
+	font-size: 18px;
+	font-weight: 1000;
+	line-height: 60px;
+	border-radius: 5px;
+	margin-top: 10px;
+	margin-left: 25%;
+	float: left;
+}
+
+.bt:hover{
+	cursor: pointer;
+	background-color: #1A374D;
+}
+
+.aa {
+	width: 300px;
+	float: left;
+	height: 60px;
+	/* margin-top: 10px; */
+	margin-left: 50px;
+	font-size: 18px;
+	/* font-weight: 700; */
+}
+
+.range {
+	width: 180px;
+	margin-top: 15px;
+	margin-left: 10px;
+}
+
+input {
+	text-align: center;
+	width: 120px;
+	height: 48px;
+	border: 2px solid black;
+	border-radius: 8px;
+	font-size: 20px;
+	font-weight: 700;
+}

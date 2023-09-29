@@ -1,0 +1,199 @@
+<html>
+	<head>
+		<title>实验四-002</title>
+		<script src="./../js/common/OrbitControls.js"></script>
+		<script src="./../js/common/jquery-3.6.0.min.js"></script>
+		<link rel="stylesheet" href="./../css/index2.css"></link>
+		<script src="./../js/ch04/index2_2.js"></script>
+		<script src="./../js/ch04/three.min.js"></script>
+		<style>
+			body { margin: 0; width: 100%; height: 100%;}
+			canvas { width: 100%; height: 100% }
+		</style>
+		
+	</head>
+	<body>
+		<div id="main" align="center" width="1000" height="512"></div>
+		<div>
+			<div style="width: 100%;height: 80px;">
+				<div id="1" class="bt">
+					正三角形
+				</div>
+				<div class="aa">
+					<div id="tm" style="float: left;margin-top: 25px; width: 80px;">
+						缩小：0.5
+					</div>
+					<input id="minR" class="range" type="range" min="0.5" max="2.0" step="0.1" value="0.5"/>
+				</div>
+				<div class="aa">
+					<div id="tm1" style="float: left;margin-top: 25px;width: 80px;">
+						放大：2
+					</div>
+					<input id="maxR" class="range" type="range" min="0.5" max="2.0" step="0.1" value="2.0"/>
+				</div>
+			</div>
+			<div style="width: 100%;height: 80px;">
+				<div id="2" class="bt">
+					正方形
+				</div>
+				<div class="aa">
+					<div id="tmCube1" style="float: left;margin-top: 25px;width: 80px;">
+						大小：1
+					</div>
+					<input id="minCube" class="range" type="range" min="1" max="5" step="1" value="1"/>
+				</div>
+				<div class="aa">
+					<div id="tmCube2"  style="float: left;margin-top: 25px;width: 80px;">
+						速度：2
+					</div>
+					<input id="maxCube" class="range" type="range" min="1" max="10" step="1" value="2"/>
+				</div>
+			</div>
+			<div style="width: 100%;height: 80px;">
+				<div id="3" class="bt">
+					立方体
+				</div>
+			</div>
+			<div style="width: 100%;height: 80px;">
+				<div id="4" class="bt">
+					圆
+				</div>
+				<div class="aa">
+					<div id="tmCircle1" style="float: left;margin-top: 25px;width: 80px;">
+						速度：1
+					</div>
+					<input id="minCircle" class="range" type="range" min="1" max="10" step="1" value="1"/>
+				</div>
+				<div class="aa">
+					<div id="tmCircle2"  style="float: left;margin-top: 25px;width: 100px;">
+						位移值：3
+					</div>
+					<input id="maxCircle" class="range" type="range" min="0" max="10" step="1" value="2"/>
+				</div>
+			</div>
+			<div style="width: 100%;height: 80px;">
+				<div id="5" class="bt">
+					清屏
+				</div>
+			</div>
+		</div>
+		
+		<script>
+			var kk;
+			var scene = new THREE.Scene();
+			// var AxesHelper = new THREE.AxesHelper(250)
+			// scene.add(AxesHelper);
+		
+			var point = new THREE.PointLight(0xffffff);
+			point.position.set(0,200,200);//点光源位置
+			scene.add(point);
+			var ambient = new THREE.AmbientLight(0x444444);
+			scene.add(ambient);
+			var width = 1000;
+			var height = 512;
+			var k = width / height; 
+			var camera = new THREE.PerspectiveCamera(60, width / height, 1, 10000);
+			camera.position.set(0,0,100);
+			camera.lookAt(scene.position);
+			var renderer = new THREE.WebGLRenderer({
+				antialias: true,
+			});
+			renderer.setSize(width,height);
+			renderer.setClearColor(0xb9d3ff,1);
+			$("#main").append(renderer.domElement)
+			function animate() {
+				requestAnimationFrame( animate );
+				renderer.render( scene, camera );
+			};
+			animate();
+			// var controls = new THREE.OrbitControls(camera,renderer.domElement);
+			
+			var a = 1;
+			$("#1").css("background","#1A374D");
+			$(renderer.domElement).click(function(event) {
+				var c = renderer.domElement;
+				var rect = c.getBoundingClientRect();
+				var x = event.clientX - rect.left * (c.width / rect.width);
+				var y = event.clientY - rect.top * (c.height / rect.height);
+				if(a == 1) getTraingle(x,y);
+				if(a == 2) getCube(x,y);
+				if(a == 3) getBox(x,y);
+				if(a == 4) getCircle(x,y);
+			});
+			$("#5").click(clearAll);
+			$("#1").click(function(){
+				a = 1;
+				clearColor()
+				$("#1").css("background","#1A374D");
+			});
+			$("#2").click(function(){
+				a = 2;
+				clearColor()
+				$("#2").css("background","#1A374D");
+			});
+			$("#3").click(function(){
+				a = 3;
+				clearColor()
+				$("#3").css("background","#1A374D");
+			});
+			$("#4").click(function(){
+				a = 4;
+				clearColor()
+				$("#4").css("background","#1A374D");
+			});
+			function clearColor() {
+				$("#1").css("background","#6998AB");
+				$("#2").css("background","#6998AB");
+				$("#3").css("background","#6998AB");
+				$("#4").css("background","#6998AB");
+			}
+			$("#minR").change(function() {
+				min1 = parseFloat($("#minR").val());
+				min1 = parseFloat(min1);
+				$("#tm").text("缩小：" + min1); 
+				if(max1 < min1) {
+					max1 = min1;
+					$("#tm1").text("放大：" + min1); 
+					document.getElementById("maxR").value = min1;
+				}
+			});
+			$("#maxR").change(function() {
+				max1 = parseFloat($("#maxR").val());
+				max1 = parseFloat(max1);
+				$("#tm1").text("放大：" + max1); 
+				if(min1 > max1) {
+					min1 = max1;
+					$("#tm").text("缩小：" + max1);
+					document.getElementById("minR").value = max1;
+				}
+			});
+			
+			$("#minCube").change(function() {
+				$("#tmCube1").text("大小：" + parseInt($("#minCube").val())); 
+				kk = parseInt($("#minCube").val());
+				for(var i = 0;i < cubes.length; i++) {
+					cubes[i].scale.set(kk,kk,0); 
+				}
+			});
+			$("#maxCube").change(function() {
+				$("#tmCube2").text("速度：" + parseInt($("#maxCube").val())); 
+				speed = 105 - parseInt($("#maxCube").val())*10;
+				clearInterval(sc);
+				sc = setInterval(changeCubes,speed);
+			});
+			
+			$("#minCircle").change(function() {
+				$("#tmCircle1").text("速度：" + parseInt($("#minCircle").val())); 
+				speed2 = 105 - parseInt($("#minCircle").val())*10;
+				clearInterval(sci);
+				console.log(speed2);
+				sci = setInterval(changeCircles,speed2);
+				
+			});
+			$("#maxCircle").change(function() {
+				$("#tmCircle2").text("位移值：" + parseInt($("#maxCircle").val())); 
+				lgh = parseInt($("#maxCircle").val())*15;
+			});
+		</script>
+	</body>
+</html>
